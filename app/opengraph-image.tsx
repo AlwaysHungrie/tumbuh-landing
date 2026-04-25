@@ -1,7 +1,5 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
-
 export const alt =
   "Tumbuh — Every plant gets a wallet. A network of autonomous plants.";
 
@@ -21,12 +19,17 @@ export default async function Image() {
   let interRegular: ArrayBuffer | undefined;
 
   try {
-    // Latin subset woff2 (Google Fonts v20); same file serves 400/600 for this range.
-    const interLatin = await fetch(
-      "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2",
-    ).then((r) => r.arrayBuffer());
-    interRegular = interLatin;
-    interSemiBold = interLatin;
+    // Satori (next/og) only accepts TrueType — woff2 throws "Unsupported OpenType signature wOF2".
+    const [regular, semi] = await Promise.all([
+      fetch(
+        "https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuLyfMZg.ttf",
+      ).then((r) => r.arrayBuffer()),
+      fetch(
+        "https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVuGKYMZg.ttf",
+      ).then((r) => r.arrayBuffer()),
+    ]);
+    interRegular = regular;
+    interSemiBold = semi;
   } catch {
     // Fallback: ImageResponse still renders with default fonts
   }
@@ -74,7 +77,8 @@ export default async function Image() {
         >
           <div
             style={{
-              display: "inline-flex",
+              display: "flex",
+              flexDirection: "row",
               alignItems: "center",
               gap: 10,
               alignSelf: "flex-start",
@@ -101,6 +105,10 @@ export default async function Image() {
           </div>
           <div
             style={{
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              alignItems: "baseline",
               marginTop: 28,
               fontSize: 64,
               fontWeight: 600,
@@ -109,9 +117,9 @@ export default async function Image() {
               color: ink,
             }}
           >
-            Every plant gets a{" "}
-            <span style={{ color: accent, fontStyle: "normal" }}>wallet</span>
-            .
+            <span>Every plant gets a </span>
+            <span style={{ color: accent }}>wallet</span>
+            <span>.</span>
           </div>
           <div
             style={{
