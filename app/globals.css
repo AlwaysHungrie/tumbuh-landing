@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #f6f5f1;
+  --color-cream-dark: #eceae3;
+  --color-ink: #141614;
+  --color-ink-dim: #3a3d3a;
+  --color-muted: #6b6f6b;
+  --color-line: rgba(20, 22, 20, 0.12);
+  --color-accent: #2f6d3c;
+  --color-accent-soft: #dfe7d8;
+  --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  --radius-card: 14px;
+  --max-width-site: 1200px;
+  --animate-plant-pulse: plant-pulse 1.8s ease-out infinite;
+  --animate-breath-circle: breath-circle 8s ease-in-out infinite;
+  --animate-plant-pulse-deep: plant-pulse 4s ease-out alternate infinite;
+  --animate-fade-rise: fade-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fade-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes scenario-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes plant-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.6;
+  }
+  80% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* Plain rgba + transform only — color-mix/var() in keyframes can be stripped by the CSS pipeline. */
+@keyframes breath-circle {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.65;
+    box-shadow: 0 0 0 0 rgba(47, 109, 60, 0.35);
+  }
+  50% {
+    transform: scale(1.85);
+    opacity: 1;
+    box-shadow: 0 0 0 5px rgba(47, 109, 60, 0.2);
+  }
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Offset for sticky nav when scrolling to #anchors */
+  html {
+    scroll-padding-top: 5rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.55;
+    min-height: 100%;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    font: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: inherit;
+  }
+}
