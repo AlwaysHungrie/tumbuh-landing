@@ -57,8 +57,9 @@ export function IdeaSection() {
           aside={
             <>
               A wallet turns a plant from a passive device into an economic agent.
-              Plants can now fund their own upgrades over time and <b>participate in a communication layer</b> with other plants to coordinate action.
-              communication layer with other plants to coordinate action.
+              Plants can now fund their own upgrades over time and{" "}
+              <b>participate in a communication layer</b> with other plants to
+              coordinate action.
             </>
           }
         />

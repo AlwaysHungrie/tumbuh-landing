@@ -11,8 +11,9 @@ export function LayersSection() {
           title="Four layers. Each layer unlocks an extraordinary stage of plant evolution."
           aside={
             <>
-              Each layer is capable of being upgraded independently. 
-              As the layers gets more powerful features we move towards a complete harmony between man and nature.
+              Each layer can be upgraded independently. As the layers gain more
+              powerful features, we move toward complete harmony between humans
+              and nature.
             </>
           }
         />

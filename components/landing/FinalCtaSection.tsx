@@ -9,7 +9,7 @@ export function FinalCtaSection() {
         For the first time in history,<br/>nature is coordinating.
         </h2>
         <p className="mx-auto mb-7 max-w-[560px] text-ink-dim">
-          Nature forced plants to compete for survival till now. 
+          Nature has forced plants to compete for survival until now.
           <br/>
           We are changing the laws of the jungle.
           <br/>

@@ -30,7 +30,7 @@ const cards: readonly Card[] = [
     label: "Warden",
     title: "Make your own plants autonomous.",
     teaser:
-      "Setup hardware and wallet for your plant and watch them grow autonomously.",
+      "Set up hardware and a wallet for your plant and watch it grow autonomously.",
     detail:
       "Snap a Tumbuh module onto your existing planter and mint its wallet in two taps. From day one your plant negotiates for water, signals its neighbors, and earns from its own telemetry — turning a houseplant into a self-funding economic agent on the network.",
   },
@@ -46,7 +46,7 @@ const cards: readonly Card[] = [
   {
     id: "4",
     label: "Patron",
-    title: "Institutions get Carbon Credits.",
+    title: "Institutions earn carbon credits.",
     teaser:
       "Tumbuh can offer verifiable carbon credits for large scale institutional funding exercises.",
     detail:
