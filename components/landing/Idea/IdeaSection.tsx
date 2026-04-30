@@ -44,7 +44,7 @@ function CompareList({
 
 export function IdeaSection() {
   return (
-    <section id="idea" className="scroll-mt-20 border-t border-line py-[88px]">
+    <section id="idea" className="scroll-mt-20 border-t border-line py-14 sm:py-20 lg:py-[88px]">
       <Container>
         <SectionHead
           kicker="01 · At the core"
@@ -64,7 +64,7 @@ export function IdeaSection() {
           }
         />
 
-        <div className="text-ink-dim text-base font-medium mt-12 mb-6">
+        <div className="mt-8 mb-5 text-[15px] font-medium text-ink-dim sm:mt-12 sm:mb-6 sm:text-base">
           This is different from a self watering pot sitting in your bedroom.
         </div>
 

@@ -18,7 +18,7 @@ export function ButtonLink({
   rel,
 }: ButtonLinkProps) {
   const base =
-    "group inline-flex items-center gap-2 rounded-full border border-transparent px-5 py-3 text-[15px] font-medium transition-[transform,background-color,border-color] duration-150 ease-out";
+    "group inline-flex min-h-11 items-center gap-2 rounded-full border border-transparent px-5 py-3 text-[15px] font-medium transition-[transform,background-color,border-color] duration-150 ease-out";
 
   const variants: Record<Variant, string> = {
     primary:

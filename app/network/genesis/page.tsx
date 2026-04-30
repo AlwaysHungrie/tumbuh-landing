@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function NetworkGenesisPage() {
   return (
-    <div className="min-h-dvh bg-cream text-ink">
+    <div className="min-h-dvh overflow-x-clip bg-cream text-ink">
       <NetworkNav />
       <main className="pb-4 pt-4">
         <Container>

@@ -8,7 +8,7 @@ type SectionHeadProps = {
 
 export function SectionHead({ kicker, title, aside }: SectionHeadProps) {
   return (
-    <div className="mb-10 flex max-[760px]:flex-col max-[760px]:items-start items-end justify-between gap-6">
+    <div className="mb-8 flex max-[760px]:flex-col max-[760px]:items-start items-end justify-between gap-5 sm:mb-10 sm:gap-6">
       <div>
         <div className="text-xs tracking-[0.16em] text-muted uppercase">
           {kicker}

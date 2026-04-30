@@ -86,7 +86,13 @@
 
   /* Offset for sticky nav when scrolling to #anchors */
   html {
-    scroll-padding-top: 5rem;
+    scroll-padding-top: 4.25rem;
+  }
+
+  @media (min-width: 721px) {
+    html {
+      scroll-padding-top: 5rem;
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {

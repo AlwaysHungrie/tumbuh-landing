@@ -66,7 +66,7 @@ export function PlantStage() {
       </div>
 
       <div
-        className="absolute top-4 right-4 grid min-w-[148px] gap-1.5 rounded-xl border border-line bg-white/78 px-3.5 py-3 text-[11px] text-ink-dim backdrop-blur-sm"
+        className="absolute top-2 right-2 z-10 grid max-w-[min(100%,11rem)] min-w-0 gap-1 rounded-lg border border-line bg-white/78 px-2.5 py-2 text-[10px] text-ink-dim backdrop-blur-sm sm:top-4 sm:right-4 sm:max-w-none sm:min-w-[148px] sm:gap-1.5 sm:rounded-xl sm:px-3.5 sm:py-3 sm:text-[11px]"
         aria-hidden
       >
         {readouts.map((row) => (
@@ -77,7 +77,7 @@ export function PlantStage() {
         ))}
       </div>
 
-      <div className="absolute bottom-4 left-4 inline-flex items-center gap-2.5 rounded-full border border-line bg-white/75 px-3 py-2 text-xs text-ink-dim backdrop-blur-sm">
+      <div className="absolute bottom-2 left-2 z-10 inline-flex max-w-[calc(100%-1rem)] items-center gap-2 rounded-full border border-line bg-white/75 px-2.5 py-1.5 text-[10px] text-ink-dim backdrop-blur-sm sm:bottom-4 sm:left-4 sm:max-w-none sm:gap-2.5 sm:px-3 sm:py-2 sm:text-xs">
         <span
           className="relative h-2 w-2 shrink-0 rounded-full bg-accent after:absolute after:-inset-1 after:rounded-full after:border-2 after:border-accent after:opacity-60 after:animate-plant-pulse after:content-['']"
           aria-hidden

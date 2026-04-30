@@ -9,7 +9,7 @@ import { SmoothAnchorScroll } from "@/components/landing/SmoothAnchorScroll";
 
 export default function Page() {
   return (
-    <div id="top" className="min-h-full w-full">
+    <div id="top" className="min-h-full w-full overflow-x-clip">
       <SmoothAnchorScroll />
       <SiteNav />
       <HeroSection />

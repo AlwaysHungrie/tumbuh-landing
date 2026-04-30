@@ -76,7 +76,7 @@ export function ScenarioSection() {
   const activeCard = cards[activeIndex];
 
   return (
-    <section id="scenario" className="scroll-mt-20 border-t border-line py-[88px]">
+    <section id="scenario" className="scroll-mt-20 border-t border-line py-14 sm:py-20 lg:py-[88px]">
       <Container>
         <SectionHead
           kicker="03 · Participate"
@@ -84,37 +84,35 @@ export function ScenarioSection() {
           aside={<>Every action counts. Every action gets rewarded.</>}
         />
 
-        <div
-          className="grid items-start gap-10 max-[900px]:grid-cols-1 lg:grid-cols-[1.05fr_0.95fr]"
-        >
-          <div className="lg:sticky lg:top-24">
+        <div className="grid items-start gap-8 max-[900px]:grid-cols-1 sm:gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="max-[900px]:order-2 lg:sticky lg:top-24">
             <div
               key={activeCard.id}
-              className="animate-fade-rise motion-reduce:animate-none"
+              className="animate-fade-rise motion-reduce:animate-none max-[900px]:text-center"
             >
-              <div className="flex items-center gap-3 text-[11px] font-medium tracking-[0.18em] uppercase">
-                <span aria-hidden className="h-px w-8 bg-line" />
+              <div className="flex items-center gap-3 text-[11px] font-medium tracking-[0.18em] uppercase max-[900px]:flex-wrap max-[900px]:justify-center">
+                <span aria-hidden className="h-px w-8 bg-line max-[900px]:hidden" />
                 <span className="text-accent">{activeCard.label}</span>
-                <span aria-hidden className="h-px w-8 bg-line" />
+                <span aria-hidden className="h-px w-8 bg-line max-[900px]:hidden" />
                 {activeCard.upcoming && (
-                  <span className="rounded-full border border-line px-2 py-0.5 text-[10px] tracking-[0.14em] text-muted">
+                  <span className="rounded-full border border-line px-2 py-0.5 text-[10px] tracking-[0.14em] text-muted max-[900px]:basis-full max-[900px]:text-center">
                     Coming soon
                   </span>
                 )}
               </div>
 
-              <h3 className="m-0 mt-4 text-[clamp(24px,2.6vw,34px)] leading-[1.12] font-semibold tracking-[-0.015em] text-ink">
+              <h3 className="m-0 mt-4 text-[clamp(24px,2.6vw,34px)] leading-[1.12] font-semibold tracking-[-0.015em] text-ink max-[900px]:text-center">
                 {activeCard.title}
               </h3>
 
-              <p className="mt-5 text-[clamp(16px,1.4vw,18px)] leading-relaxed text-ink-dim">
+              <p className="mt-5 text-[clamp(16px,1.4vw,18px)] leading-relaxed text-ink-dim max-[900px]:text-center">
                 {activeCard.detail}
               </p>
             </div>
 
           </div>
 
-          <div className="grid gap-3">
+          <div className="grid max-[900px]:order-1 gap-3">
             {cards.map((card, index) => {
               const isActive = activeIndex === index;
               return (
@@ -134,7 +132,7 @@ export function ScenarioSection() {
                       setProgressNonce((n) => n + 1);
                     }
                   }}
-                  className={`group relative grid grid-cols-[58px_1fr] items-start gap-4 overflow-hidden rounded-xl border p-4 px-[18px] text-left transition-[transform,border-color,background-color,box-shadow] duration-300 ease-out motion-reduce:transition-none ${
+                  className={`group relative grid min-h-[52px] grid-cols-[52px_1fr] items-start gap-3 overflow-hidden rounded-xl border p-4 px-4 text-left transition-[transform,border-color,background-color,box-shadow] duration-300 ease-out motion-reduce:transition-none sm:min-h-0 sm:grid-cols-[58px_1fr] sm:gap-4 sm:px-[18px] ${
                     isActive
                       ? "-translate-y-0.5 border-accent bg-accent-soft shadow-[0_10px_28px_-22px_rgba(47,109,60,0.7)]"
                       : "border-line bg-white hover:-translate-y-0.5 hover:border-ink/30"

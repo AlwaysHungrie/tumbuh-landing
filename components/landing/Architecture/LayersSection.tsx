@@ -4,7 +4,7 @@ import { layers } from "../data";
 
 export function LayersSection() {
   return (
-    <section id="layers" className="scroll-mt-20 border-t border-line py-[88px]">
+    <section id="layers" className="scroll-mt-20 border-t border-line py-14 sm:py-20 lg:py-[88px]">
       <Container>
         <SectionHead
           kicker="02 · System"

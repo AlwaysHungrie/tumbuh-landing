@@ -12,6 +12,7 @@ const WAITLIST_TEST_ERROR_TOKEN = "__error__";
 
 export function SiteNav() {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [contact, setContact] = useState("");
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
   const dialogTitleId = useId();
@@ -47,6 +48,15 @@ export function SiteNav() {
     };
   }, [dialogOpen, closeDialog]);
 
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileNavOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [mobileNavOpen]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const trimmed = contact.trim();
@@ -70,6 +80,7 @@ export function SiteNav() {
   }
 
   const openDialog = () => {
+    setMobileNavOpen(false);
     setDialogOpen(true);
     setSubmitStatus("idle");
   };
@@ -77,10 +88,14 @@ export function SiteNav() {
   return (
     <>
       <nav className="sticky top-0 z-20 border-b border-line bg-cream/78 backdrop-blur-md backdrop-saturate-[140%]">
-        <Container className="flex h-16 items-center justify-between">
-          <Link className="flex items-center gap-2.5 text-lg font-semibold tracking-tight" href="/#top">
+        <Container className="flex h-14 min-h-14 items-center justify-between gap-2 sm:h-16 sm:min-h-16">
+          <Link
+            className="flex min-w-0 shrink items-center gap-2 text-base font-semibold tracking-tight sm:gap-2.5 sm:text-lg"
+            href="/#top"
+            onClick={() => setMobileNavOpen(false)}
+          >
             <span
-              className="relative h-12 w-12 shrink-0 basis-12 overflow-visible"
+              className="relative h-10 w-10 shrink-0 overflow-visible sm:h-12 sm:w-12 sm:basis-12"
               aria-hidden
             >
               <Image
@@ -88,12 +103,12 @@ export function SiteNav() {
                 alt=""
                 width={256}
                 height={256}
-                className="absolute -mb-6 top-1/2 left-1/2 h-[72px] w-[72px] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain"
+                className="absolute top-1/2 left-1/2 h-[60px] w-[60px] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain sm:-mb-6 sm:h-[72px] sm:w-[72px]"
               />
             </span>
-            Tumbuh
+            <span className="truncate">Tumbuh</span>
           </Link>
-          <div className="hidden min-[721px]:flex gap-7 text-sm text-ink-dim">
+          <div className="hidden min-[721px]:flex shrink-0 gap-7 text-sm text-ink-dim">
             <Link className="hover:text-ink" href="/#idea">
               Idea
             </Link>
@@ -104,17 +119,76 @@ export function SiteNav() {
               Participate
             </Link>
           </div>
-          <button
-            type="button"
-            className="rounded-full bg-ink px-4 py-2.5 text-sm font-medium text-cream transition-[transform,background-color] duration-150 ease-out hover:-translate-y-px hover:bg-accent"
-            onClick={openDialog}
-            aria-haspopup="dialog"
-            aria-expanded={dialogOpen}
-            aria-controls="join-waitlist-dialog"
-          >
-            Join the network
-          </button>
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+            <button
+              type="button"
+              className="rounded-full bg-ink px-3 py-2.5 text-xs font-medium text-cream transition-[transform,background-color] duration-150 ease-out hover:-translate-y-px hover:bg-accent sm:px-4 sm:text-sm"
+              onClick={openDialog}
+              aria-haspopup="dialog"
+              aria-expanded={dialogOpen}
+              aria-controls="join-waitlist-dialog"
+            >
+              <span className="max-[380px]:sr-only">Join the network</span>
+              <span className="hidden max-[380px]:inline">Join</span>
+            </button>
+            <button
+              type="button"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-ink transition-colors hover:bg-cream-dark min-[721px]:hidden"
+              onClick={() => setMobileNavOpen((o) => !o)}
+              aria-expanded={mobileNavOpen}
+              aria-controls="site-mobile-nav"
+              aria-label={mobileNavOpen ? "Close menu" : "Open menu"}
+            >
+              <span className="relative block h-3.5 w-[18px]" aria-hidden>
+                <span
+                  className={`absolute left-0 block h-0.5 w-full rounded-full bg-current transition-[transform,top] duration-200 ${
+                    mobileNavOpen ? "top-1.5 rotate-45" : "top-0"
+                  }`}
+                />
+                <span
+                  className={`absolute left-0 top-1.5 block h-0.5 w-full rounded-full bg-current transition-opacity duration-200 ${
+                    mobileNavOpen ? "opacity-0" : "opacity-100"
+                  }`}
+                />
+                <span
+                  className={`absolute left-0 block h-0.5 w-full rounded-full bg-current transition-[transform,top] duration-200 ${
+                    mobileNavOpen ? "top-1.5 -rotate-45" : "top-3"
+                  }`}
+                />
+              </span>
+            </button>
+          </div>
         </Container>
+        {mobileNavOpen ? (
+          <div
+            id="site-mobile-nav"
+            className="border-b border-line bg-cream/95 px-4 py-3 backdrop-blur-md min-[721px]:hidden"
+          >
+            <div className="mx-auto flex max-w-site flex-col gap-0.5 text-sm text-ink-dim sm:px-6">
+              <Link
+                className="rounded-lg px-3 py-3 font-medium text-ink hover:bg-cream-dark"
+                href="/#idea"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                Idea
+              </Link>
+              <Link
+                className="rounded-lg px-3 py-3 font-medium text-ink hover:bg-cream-dark"
+                href="/#layers"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                System
+              </Link>
+              <Link
+                className="rounded-lg px-3 py-3 font-medium text-ink hover:bg-cream-dark"
+                href="/#scenario"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                Participate
+              </Link>
+            </div>
+          </div>
+        ) : null}
       </nav>
 
       {dialogOpen ? (

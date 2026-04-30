@@ -13,13 +13,31 @@ export function SmoothAnchorScroll() {
       if (e.button !== 0) return;
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
-      const anchor = (e.target as Element | null)?.closest("a[href^='#']");
+      const targetEl = e.target as Element | null;
+      const anchor =
+        targetEl?.closest("a[href^='#']") ??
+        targetEl?.closest("a[href^='/#']");
       if (!anchor || !(anchor instanceof HTMLAnchorElement)) return;
 
       const href = anchor.getAttribute("href");
       if (!href || href === "#") return;
 
-      const id = href.slice(1);
+      let id: string | null = null;
+      if (href.startsWith("#") && href.length > 1) {
+        id = href.slice(1);
+      } else if (href.startsWith("/#") && href.length > 2) {
+        try {
+          const u = new URL(href, window.location.origin);
+          if (
+            u.pathname === window.location.pathname &&
+            u.hash.length > 1
+          ) {
+            id = u.hash.slice(1);
+          }
+        } catch {
+          return;
+        }
+      }
       if (!id) return;
 
       const el = document.getElementById(id);
@@ -33,7 +51,7 @@ export function SmoothAnchorScroll() {
         behavior: reduced ? "auto" : "smooth",
         block: "start",
       });
-      history.pushState(null, "", href);
+      history.pushState(null, "", `#${id}`);
     };
 
     document.addEventListener("click", onClickCapture, true);
