@@ -8,11 +8,9 @@ export default function NetworkLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="min-h-dvh overflow-x-clip bg-cream text-ink">
+    <div className="flex h-dvh flex-col overflow-hidden bg-cream text-ink">
       <SiteNav />
-      <main className="pb-4 pt-4">
-        <Container>{children}</Container>
-      </main>
-    </main>
+      <div className="min-h-0 flex-1 overflow-hidden px-4">{children}</div>
+    </div>
   );
 }

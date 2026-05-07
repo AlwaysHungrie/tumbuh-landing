@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Container } from "./Container";
 import { usePathname } from "next/navigation";
+import { EarthIcon, Map, MapPin, MapPinPen, MapPlus } from "lucide-react";
 
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
@@ -126,8 +127,11 @@ export function SiteNav() {
                 </Link>
               </>
             ) : (
-              <Link className="hover:text-ink" href="/network/map">
-                Open World Map
+              <Link
+                className="hover:text-ink flex items-center gap-2"
+                href="/network/map"
+              >
+                <EarthIcon /> Open World Map
               </Link>
             )}
           </div>

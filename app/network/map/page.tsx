@@ -21,7 +21,7 @@ const plantPoints = [
   {
     type: "Feature",
     properties: {
-      walletAddress: "TessVdML9pBGgG9yGks7o4HewRaXVAMuoVj4x83GLQH",
+      walletAddress: "5RnVY4jqrWfhnHNSyAhRJBXYDKoGHVbr6gF71du1ejwj",
     },
     geometry: {
       coordinates: [73.68448546047813, 19.578057899024188],
