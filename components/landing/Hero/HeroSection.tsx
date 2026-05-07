@@ -37,7 +37,10 @@ export function HeroSection() {
   }, [startedAt]);
 
   return (
-    <header id="vision" className="relative scroll-mt-20 pb-8 pt-14 sm:pb-10 sm:pt-[72px]">
+    <header
+      id="vision"
+      className="relative scroll-mt-20 pb-8 pt-14 sm:pb-10 sm:pt-[72px]"
+    >
       <Container className="grid items-center gap-8 sm:gap-10 lg:grid-cols-[1.05fr_0.95fr]">
         <div className="min-w-0">
           <span className="inline-flex max-w-full flex-wrap items-center gap-2 rounded-full border border-line bg-cream-dark px-3 py-1.5 text-[11px] tracking-[0.12em] text-ink-dim uppercase sm:text-xs sm:tracking-[0.14em]">
@@ -53,13 +56,14 @@ export function HeroSection() {
             {"."}
           </h1>
           <p className="mb-6 max-w-[560px] text-[clamp(15px,3.5vw,19px)] text-ink-dim sm:mb-7 sm:text-[clamp(16px,1.4vw,19px)]">
-            Tumbuh is building a network of autonomous plants that communicate with each
-            other and with their wallets, interact with the rest of the world.
-            Plants buy real resources for their sustenance and collaborate for survival.
+            Tumbuh is building a network of autonomous plants that communicate
+            with each other and with their wallets, interact with the rest of
+            the world. Plants buy real resources for their sustenance and
+            collaborate for survival.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <ButtonLink
-              href="/network/genesis"
+              href="/network/GyzzvFLs4GdytV85nhMpdPr1fkih9Vk5bi5spBpfspiw"
               variant="primary"
               className="w-full justify-center sm:w-auto"
             >

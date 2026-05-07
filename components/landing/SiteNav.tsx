@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Container } from "./Container";
+import { usePathname } from "next/navigation";
 
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
@@ -11,6 +12,9 @@ type SubmitStatus = "idle" | "submitting" | "success" | "error";
 const WAITLIST_TEST_ERROR_TOKEN = "__error__";
 
 export function SiteNav() {
+  const currentPath = usePathname();
+  const isLanding = currentPath === "/";
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [contact, setContact] = useState("");
@@ -109,20 +113,28 @@ export function SiteNav() {
             <span className="truncate">Tumbuh</span>
           </Link>
           <div className="hidden min-[721px]:flex shrink-0 gap-7 text-sm text-ink-dim">
-            <Link className="hover:text-ink" href="/#idea">
-              Idea
-            </Link>
-            <Link className="hover:text-ink" href="/#layers">
-              System
-            </Link>
-            <Link className="hover:text-ink" href="/#scenario">
-              Participate
-            </Link>
+            {isLanding ? (
+              <>
+                <Link className="hover:text-ink" href="/#idea">
+                  Idea
+                </Link>
+                <Link className="hover:text-ink" href="/#layers">
+                  System
+                </Link>
+                <Link className="hover:text-ink" href="/#scenario">
+                  Participate
+                </Link>
+              </>
+            ) : (
+              <Link className="hover:text-ink" href="/network/map">
+                Open World Map
+              </Link>
+            )}
           </div>
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             <button
               type="button"
-              className="rounded-full bg-ink px-3 py-2.5 text-xs font-medium text-cream transition-[transform,background-color] duration-150 ease-out hover:-translate-y-px hover:bg-accent sm:px-4 sm:text-sm"
+              className="rounded-full px-3 py-2.5 text-xs font-medium text-ink duration-150 ease-out hover:opacity-50 sm:px-4 sm:text-sm"
               onClick={openDialog}
               aria-haspopup="dialog"
               aria-expanded={dialogOpen}
@@ -131,6 +143,16 @@ export function SiteNav() {
               <span className="max-[380px]:sr-only">Join the network</span>
               <span className="hidden max-[380px]:inline">Join</span>
             </button>
+
+            {isLanding && (
+              <Link
+                href="/network/map"
+                className="rounded-full bg-ink px-3 py-2.5 text-xs font-medium text-cream transition-[transform,background-color] duration-150 ease-out hover:-translate-y-px hover:bg-accent sm:px-4 sm:text-sm"
+              >
+                <span className="max-[380px]:sr-only">Explore →</span>
+              </Link>
+            )}
+
             <button
               type="button"
               className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-ink transition-colors hover:bg-cream-dark min-[721px]:hidden"
@@ -227,9 +249,10 @@ export function SiteNav() {
               Join the waitlist
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-ink-dim">
-              Our network is still a work in progress. Drop either your email, Telegram,
-              or X handle (any one way for us to reach you) and we will add you to the waitlist and reach out
-              as soon as we are ready.
+              Our network is still a work in progress. Drop either your email,
+              Telegram, or X handle (any one way for us to reach you) and we
+              will add you to the waitlist and reach out as soon as we are
+              ready.
             </p>
 
             {submitStatus === "success" ? (
