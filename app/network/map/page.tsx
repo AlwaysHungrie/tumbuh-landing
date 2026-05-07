@@ -153,7 +153,7 @@ export default function NetworkMapPage() {
         height={height - 96}
         backgroundColor="#f6f5f1"
         atmosphereAltitude={0.2}
-        globeImageUrl="http://localhost:3000/earthmap4k.jpg"
+        globeImageUrl="/earthmap4k.jpg"
         onGlobeReady={() => setIsGlobeReady(true)}
         onZoom={handleCameraMove}
         // onCameraMove={handleCameraMove}
