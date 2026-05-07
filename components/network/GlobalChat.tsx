@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef, useState, useCallback } from "react";
+
 const WALLET = "5RnVY4jqrWfhnHNSyAhRJBXYDKoGHVbr6gF71du1ejwj";
 const SHORT = (w: string) => `${w.slice(0, 4)}…${w.slice(-4)}`;
 const ME = SHORT(WALLET);
@@ -15,73 +17,15 @@ interface ChatMessage {
   ts: string;
 }
 
-const peers = ["8Xy3…mN2k", "Pq7R…vW5j", "Lk9T…hB1f", "Nm4C…dE8r"];
-
-const MESSAGES: ChatMessage[] = [
-  {
-    id: 1,
-    from: ME,
-    to: peers[0],
-    body: "Moisture reading above threshold — requesting peer validation.",
-    action: "accept",
-    ts: "09:14",
-  },
-  {
-    id: 2,
-    from: peers[1],
-    to: ME,
-    body: "Light sensor drift detected at node 3. Update calibration?",
-    action: "update_code",
-    ts: "09:21",
-  },
-  {
-    id: 3,
-    from: peers[2],
-    to: peers[0],
-    body: "Confirmed block 4821. Plant stake settled.",
-    action: "ignore",
-    ts: "09:35",
-  },
-  {
-    id: 4,
-    from: ME,
-    to: peers[3],
-    body: "Requesting co-signature for irrigation event.",
-    action: "accept",
-    ts: "10:02",
-  },
-  {
-    id: 5,
-    from: peers[3],
-    to: ME,
-    body: "Soil pH out of optimal range. Suggest intervention.",
-    action: "update_code",
-    ts: "10:18",
-  },
-  {
-    id: 6,
-    from: peers[0],
-    to: peers[2],
-    body: "New peer joined the grove. Handshake complete.",
-    action: "ignore",
-    ts: "10:44",
-  },
-  {
-    id: 7,
-    from: ME,
-    to: peers[1],
-    body: "Nightly report: 14 readings recorded, 2 anomalies flagged.",
-    action: "accept",
-    ts: "11:00",
-  },
-];
-
-/* ── action config ───────────────────────────────────────────── */
+interface ApiResponse {
+  messages: ChatMessage[];
+  nextCursor: string | null;
+}
 
 type ActionMeta = {
   label: string;
-  active: string; // classes when this segment is selected
-  inactive: string; // classes when not selected
+  active: string;
+  inactive: string;
 };
 
 const ACTION_CONFIG: Record<ActionButton, ActionMeta> = {
@@ -104,12 +48,64 @@ const ACTION_CONFIG: Record<ActionButton, ActionMeta> = {
 
 const ACTION_ORDER: ActionButton[] = ["accept", "ignore", "update_code"];
 
-/* ── component ───────────────────────────────────────────────── */
-
 export function GlobalChat() {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const loadingRef = useRef(false);
+
+  const fetchPage = useCallback(async (cursor: string | null) => {
+    if (loadingRef.current) return;
+    loadingRef.current = true;
+    setLoading(true);
+    try {
+      const url = cursor ? `/api/chat?cursor=${cursor}` : `/api/chat`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("fetch failed");
+      const data: ApiResponse = await res.json();
+      setMessages((prev) => {
+        const existingIds = new Set(prev.map((m) => m.id));
+        const fresh = data.messages.filter((m) => !existingIds.has(m.id));
+        return [...prev, ...fresh];
+      });
+      setNextCursor(data.nextCursor);
+    } catch {
+      // silently fail — chat is non-critical UI
+    } finally {
+      loadingRef.current = false;
+      setLoading(false);
+      setInitialLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchPage(null);
+  }, [fetchPage]);
+
+  // Infinite scroll — watch sentinel at bottom
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && nextCursor && !loadingRef.current) {
+          fetchPage(nextCursor);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [nextCursor, fetchPage]);
+
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-xl border border-line bg-white shadow-[0_1px_0_rgba(255,255,255,0.8)_inset]">
-      {/* ── Header ── */}
+      {/* Header */}
       <div className="flex items-center justify-between border-b border-line px-4 py-3">
         <span className="text-[11px] font-semibold tracking-[0.15em] text-muted uppercase">
           Global Chat
@@ -117,11 +113,23 @@ export function GlobalChat() {
         <span className="font-mono text-[10px] text-muted/70">{ME}</span>
       </div>
 
-      {/* ── Feed ── */}
+      {/* Feed */}
       <div className="flex-1 divide-y divide-line overflow-y-auto">
-        {MESSAGES.map((msg) => (
+        {initialLoading && (
+          <div className="flex items-center justify-center py-8">
+            <span className="text-[11px] text-muted">Loading…</span>
+          </div>
+        )}
+
+        {!initialLoading && messages.length === 0 && (
+          <div className="flex items-center justify-center py-8">
+            <span className="text-[11px] text-muted">No messages yet.</span>
+          </div>
+        )}
+
+        {messages.map((msg) => (
           <div key={msg.id} className="flex flex-col gap-2.5 px-4 py-3.5">
-            {/* Meta row: from / to / timestamp */}
+            {/* Meta row */}
             <div className="flex items-baseline justify-between gap-2">
               <div className="flex min-w-0 gap-3 font-mono text-[10px]">
                 <span className="flex min-w-0 gap-1">
@@ -141,7 +149,7 @@ export function GlobalChat() {
             {/* Body */}
             <p className="text-[12.5px] leading-[1.6] text-ink">{msg.body}</p>
 
-            {/* Segmented action group */}
+            {/* Action group */}
             <div className="flex overflow-hidden rounded-md border border-line bg-cream text-[10.5px] font-medium">
               {ACTION_ORDER.map((a, i) => {
                 const isActive = a === msg.action;
@@ -164,9 +172,23 @@ export function GlobalChat() {
             </div>
           </div>
         ))}
+
+        {/* Infinite scroll sentinel */}
+        <div ref={sentinelRef} className="py-1">
+          {loading && !initialLoading && (
+            <p className="py-2 text-center text-[10px] text-muted">
+              Loading more…
+            </p>
+          )}
+          {!loading && !nextCursor && messages.length > 0 && (
+            <p className="py-2 text-center text-[10px] text-muted/40">
+              End of feed
+            </p>
+          )}
+        </div>
       </div>
 
-      {/* ── Footer ── */}
+      {/* Footer */}
       <div className="border-t border-line px-4 py-3">
         <div className="flex items-center gap-2.5 rounded-lg border border-line bg-cream px-3 py-2.5">
           <span
