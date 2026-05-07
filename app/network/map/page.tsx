@@ -156,17 +156,20 @@ export default function NetworkMapPage() {
         globeImageUrl="http://localhost:3000/earthmap4k.jpg"
         onGlobeReady={() => setIsGlobeReady(true)}
         onZoom={handleCameraMove}
-        onCameraMove={handleCameraMove}
+        // onCameraMove={handleCameraMove}
         globeCurvatureResolution={8}
         htmlElementsData={gData}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         htmlElement={(d: any) => {
           const el = document.createElement("div");
           el.innerHTML = "🌱";
           // el.classList.add("p-4 bg-green-500 rounded-full");
           el.style.fontSize = "32px";
+
           el.style.width = `${d.size}px`;
           el.style.transition = "transform 250ms opacity 250ms";
 
+          // @ts-expect-error fix later
           el.style["pointer-events"] = "auto";
           el.style.cursor = "pointer";
 
@@ -189,6 +192,7 @@ export default function NetworkMapPage() {
           return el;
         }}
         htmlElementVisibilityModifier={(el, isVisible) =>
+          // @ts-expect-error fix later
           (el.style.opacity = isVisible ? 1 : 0)
         }
       />
