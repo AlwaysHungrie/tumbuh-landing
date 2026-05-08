@@ -10,6 +10,8 @@ import { PlantList } from "@/components/admin/PlantList";
 import { RegisterSensorForm } from "@/components/admin/RegisterSensorForm";
 import { SensorList } from "@/components/admin/SensorList";
 import { Wallet } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export type Token = {
   id: number;
@@ -99,11 +101,26 @@ export default function AdminPage() {
     <div className="flex h-dvh flex-col overflow-hidden bg-cream text-ink">
       {/* header */}
       <div className="flex items-center justify-between border-b border-line px-6 py-4">
-        <span className="text-[10px] font-bold tracking-[0.18em] text-muted uppercase">
-          Admin
-        </span>
+        <Link
+          className="flex min-w-0 shrink items-center gap-2 text-base font-semibold tracking-tight sm:gap-2.5 sm:text-lg"
+          href="/#top"
+        >
+          <span
+            className="relative h-10 w-10 shrink-0 overflow-visible sm:h-12 sm:w-12 sm:basis-12"
+            aria-hidden
+          >
+            <Image
+              src="/potted-plant.png"
+              alt=""
+              width={256}
+              height={256}
+              className="absolute top-1/2 left-1/2 h-[60px] w-[60px] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain sm:-mb-6 sm:h-[72px] sm:w-[72px]"
+            />
+          </span>
+          <span className="truncate">Tumbuh - Admin Panel</span>
+        </Link>
 
-        <div className="mb-4 flex items-center gap-2 rounded-lg bg-cream px-3 py-2 ring-1 ring-line/30">
+        <div className="mb-4 flex items-center gap-2 rounded-lg bg-cream px-3 py-2 ring-1 ring-line/80">
           <Wallet className="h-3.5 w-3.5 shrink-0 text-muted" />
           <button
             disabled={!ready}
@@ -131,7 +148,7 @@ export default function AdminPage() {
           <p className="text-[12px] text-muted">Connect wallet to continue.</p>
         </div>
       ) : (
-        <div className="grid flex-1 min-h-0 grid-cols-3 gap-4 overflow-hidden p-4">
+        <div className="grid flex-1 min-h-0 grid-rows-2 grid-cols-3 gap-4 overflow-hidden p-4">
           <CreateTokenForm
             solanaWallet={solanaWallet}
             onSuccess={fetchTokens}

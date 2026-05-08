@@ -22,14 +22,24 @@ async function ensureTable() {
   await sql`ALTER TABLE sensors2 ADD COLUMN IF NOT EXISTS unit_symbol TEXT NOT NULL DEFAULT ''`;
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   await ensureTable();
 
-  const rows = await sql`
-    SELECT id, sensor_wallet, plant_wallet, mint_address, signature, name, type, tab_label, unit_symbol, created_at
-    FROM sensors2
-    ORDER BY created_at DESC
-  `;
+  const { searchParams } = new URL(req.url);
+  const plantWallet = searchParams.get("plant_wallet");
+
+  const rows = plantWallet
+    ? await sql`
+        SELECT id, sensor_wallet, plant_wallet, mint_address, signature, name, type, tab_label, unit_symbol, created_at
+        FROM sensors2
+        WHERE plant_wallet = ${plantWallet}
+        ORDER BY created_at DESC
+      `
+    : await sql`
+        SELECT id, sensor_wallet, plant_wallet, mint_address, signature, name, type, tab_label, unit_symbol, created_at
+        FROM sensors2
+        ORDER BY created_at DESC
+      `;
 
   return NextResponse.json({ sensors: rows });
 }

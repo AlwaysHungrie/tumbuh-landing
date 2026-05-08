@@ -148,12 +148,19 @@ export function SiteNav() {
               <span className="hidden max-[380px]:inline">Join</span>
             </button>
 
-            {isLanding && (
+            {isLanding ? (
               <Link
                 href="/network/map"
                 className="rounded-full bg-ink px-3 py-2.5 text-xs font-medium text-cream transition-[transform,background-color] duration-150 ease-out hover:-translate-y-px hover:bg-accent sm:px-4 sm:text-sm"
               >
                 <span className="max-[380px]:sr-only">Explore →</span>
+              </Link>
+            ) : (
+              <Link
+                href="/admin"
+                className="rounded-full bg-ink px-3 py-2.5 text-xs font-medium text-cream transition-[transform,background-color] duration-150 ease-out hover:-translate-y-px hover:bg-accent sm:px-4 sm:text-sm"
+              >
+                <span className="max-[380px]:sr-only">Admin Panel</span>
               </Link>
             )}
 

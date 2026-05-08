@@ -1,5 +1,6 @@
 "use client";
 
+import { Plant } from "@/app/admin/page";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -7,56 +8,13 @@ import { useEffect, useRef, useState } from "react";
 // Dynamically import Globe with ssr: false to avoid "window is not defined"
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
-const plantPoints = [
-  {
-    type: "Feature",
-    properties: {
-      walletAddress: "GyzzvFLs4GdytV85nhMpdPr1fkih9Vk5bi5spBpfspiw",
-    },
-    geometry: {
-      coordinates: [73.01630298880414, 19.41483388922299],
-      type: "Point",
-    },
-  },
-  {
-    type: "Feature",
-    properties: {
-      walletAddress: "5RnVY4jqrWfhnHNSyAhRJBXYDKoGHVbr6gF71du1ejwj",
-    },
-    geometry: {
-      coordinates: [73.68448546047813, 19.578057899024188],
-      type: "Point",
-    },
-  },
-  {
-    type: "Feature",
-    properties: {
-      walletAddress: "9H6tua7jkLhdm3w8BvgpTn5LZNU7g4ZynDmCiNN3q6Rp",
-    },
-    geometry: {
-      coordinates: [74.17432385138031, 21.107040765637834],
-      type: "Point",
-    },
-  },
-  {
-    type: "Feature",
-    properties: {
-      walletAddress: "ojh19ojaKduoJZuaJADhcVGp4xt1TcdAvZmpVsCorch",
-    },
-    geometry: {
-      coordinates: [72.59232172187927, 21.934539684866635],
-      type: "Point",
-    },
-  },
-];
-
-const gData = plantPoints.map((point) => ({
-  lat: point.geometry.coordinates[1],
-  lng: point.geometry.coordinates[0],
-  size: 7 + Math.random() * 30,
-  color: ["red", "white", "blue", "green"][Math.round(Math.random() * 3)],
-  walletAddress: point.properties.walletAddress,
-}));
+type DataPoint = {
+  lat: number;
+  lng: number;
+  size: number;
+  color: string;
+  walletAddress: string;
+};
 
 export default function NetworkMapPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -64,10 +22,37 @@ export default function NetworkMapPage() {
   const [isMounted, setIsMounted] = useState(false);
   const [isGlobeReady, setIsGlobeReady] = useState(false);
   const [hoveredWallet, setHoveredWallet] = useState<string | null>(null);
-  const [selectedWallet, setSelectedWallet] = useState<string | null>(
-    gData[0]?.walletAddress || null,
-  );
+  const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [gData, setGData] = useState<DataPoint[]>([]);
+  const [plantRefreshKey, setPlantRefreshKey] = useState(0);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const fetchPlants = () => {
+    setPlantRefreshKey((k) => k + 1);
+  };
+
+  useEffect(() => {
+    fetch("/api/plants")
+      .then((r) => r.json())
+      .then((data) => {
+        console.log("getdata: ", data);
+        const gData = (data.plants ?? []).map((p: Plant) => ({
+          lat: parseFloat(p.longitude),
+          lng: parseFloat(p.latitude),
+          size: 7 + Math.random() * 30,
+          color: ["red", "white", "blue", "green"][
+            Math.round(Math.random() * 3)
+          ],
+          walletAddress: p.wallet,
+        }));
+
+        console.log("gData: ", gData);
+        setGData(gData);
+        setSelectedWallet(gData[0]?.walletAddress || null);
+      })
+      .catch(() => {});
+  }, [plantRefreshKey]);
 
   const handleCameraMove = () => {
     if (!globeEl.current || hoveredWallet) return;
@@ -162,16 +147,21 @@ export default function NetworkMapPage() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         htmlElement={(d: any) => {
           const el = document.createElement("div");
-          el.innerHTML = "🌱";
-          // el.classList.add("p-4 bg-green-500 rounded-full");
+          el.innerHTML = "🌱  ";
+          el.style.backgroundColor = "#32a85240";
+          el.style.border = "3px solid #32a852";
+          el.style.color = "white";
+          el.style.borderRadius = "100%";
           el.style.fontSize = "32px";
 
-          el.style.width = `${d.size}px`;
+          el.style.width = `${32}px`;
+          el.style.height = `${32}px`;
           el.style.transition = "transform 250ms opacity 250ms";
 
           // @ts-expect-error fix later
           el.style["pointer-events"] = "auto";
           el.style.cursor = "pointer";
+          el.style.lineHeight = "0";
 
           el.onmouseenter = () => {
             setHoveredWallet(d.walletAddress);
@@ -206,7 +196,7 @@ export default function NetworkMapPage() {
             key={hoveredWallet || selectedWallet}
             className="text-sm font-mono text-gray-800 break-all text-center max-w-[300px] animate-in fade-in slide-in-from-bottom-1 duration-500"
           >
-            4
+            {gData.length}
           </span>
         </div>
       </div>

@@ -7,31 +7,12 @@ const SHORT = (w: string) => `${w.slice(0, 4)}…${w.slice(-4)}`;
 
 type SensorData = {
   name: string;
-  type: "sensor" | "sensor and actuator";
-  tabLabel: string;
-  wallet: string;
+  type: string;
+  tab_label: string;
+  sensor_wallet: string;
   mint_address: string;
   unit_symbol: string;
 };
-
-const SENSOR_DATA: SensorData[] = [
-  {
-    name: "Moisture Sensor And Water Pump",
-    type: "sensor and actuator",
-    tabLabel: "water",
-    wallet: "GyzzvFLs4GdytV85nhMpdPr1fkih9Vk5bi5spBpfspiw",
-    mint_address: "6dQbq5HataYbjF16uQFHpaTNfgv4Vu2JgNy1WBjdDzga",
-    unit_symbol: "% VWC",
-  },
-  {
-    name: "Light Sensor",
-    type: "sensor",
-    tabLabel: "light",
-    wallet: "5RnVY4jqrWfhnHNSyAhRJBXYDKoGHVbr6gF71du1ejwj",
-    mint_address: "863f4mSWsWC15fE2SCKZ521EY1Agjno9f22WojbeRX8o",
-    unit_symbol: "LUX",
-  },
-];
 
 type RawTx = {
   block_time: number;
@@ -100,6 +81,15 @@ async function fetchTxs(walletAddress: string, offset?: string) {
   const res = await fetch(url.toString());
   if (!res.ok) throw new Error(`API error ${res.status}`);
   return res.json() as Promise<{ next_offset?: string; transactions: RawTx[] }>;
+}
+
+async function fetchSensors(plantWallet: string): Promise<SensorData[]> {
+  const url = new URL("/api/sensors", window.location.origin);
+  url.searchParams.set("plant_wallet", plantWallet);
+  const res = await fetch(url.toString());
+  if (!res.ok) throw new Error(`API error ${res.status}`);
+  const data = await res.json() as { sensors: SensorData[] };
+  return data.sensors;
 }
 
 function formatBlockTime(ts: number) {
@@ -178,17 +168,34 @@ function fetchReducer(state: FetchState, action: FetchAction): FetchState {
   }
 }
 
-export function SensorPanel() {
+export function SensorPanel({ wallet }: { wallet: string }) {
+  const [sensors, setSensors] = useState<{ wallet: string; data: SensorData[] } | null>(null);
   const [tabIndex, setTabIndex] = useState(0);
   const [state, dispatch] = useReducer(fetchReducer, initialState);
 
-  const sensor = SENSOR_DATA[tabIndex];
+  useEffect(() => {
+    let cancelled = false;
+    fetchSensors(wallet)
+      .then((data) => {
+        if (!cancelled) {
+          setSensors({ wallet, data });
+          setTabIndex(0);
+        }
+      })
+      .catch(() => { if (!cancelled) setSensors({ wallet, data: [] }); });
+    return () => { cancelled = true; };
+  }, [wallet]);
+
+  const sensorsLoading = sensors === null || sensors.wallet !== wallet;
+  const sensorList = sensorsLoading ? [] : sensors.data;
+  const sensor = sensorList[tabIndex];
   const { readings, nextOffset, loading, loadingMore, error } = state;
 
   useEffect(() => {
+    if (!sensor) return;
     let cancelled = false;
     dispatch({ type: "FETCH_START" });
-    fetchTxs(sensor.wallet)
+    fetchTxs(sensor.sensor_wallet)
       .then((data) => {
         if (!cancelled)
           dispatch({
@@ -207,13 +214,13 @@ export function SensorPanel() {
     return () => {
       cancelled = true;
     };
-  }, [sensor.wallet, sensor.mint_address]);
+  }, [sensor?.sensor_wallet, sensor?.mint_address]);
 
   async function handleLoadMore() {
-    if (!nextOffset) return;
+    if (!nextOffset || !sensor) return;
     dispatch({ type: "MORE_START" });
     try {
-      const data = await fetchTxs(sensor.wallet, nextOffset);
+      const data = await fetchTxs(sensor.sensor_wallet, nextOffset);
       dispatch({
         type: "MORE_SUCCESS",
         readings: extractBurns(data.transactions, sensor.mint_address),
@@ -227,12 +234,28 @@ export function SensorPanel() {
     }
   }
 
+  if (sensorsLoading) {
+    return (
+      <div className="flex h-full items-center justify-center rounded-xl border border-line bg-white text-[12px] text-muted shadow-[0_1px_0_rgba(255,255,255,0.8)_inset]">
+        Loading sensors…
+      </div>
+    );
+  }
+
+  if (sensorList.length === 0) {
+    return (
+      <div className="flex h-full items-center justify-center rounded-xl border border-line bg-white text-[12px] text-muted shadow-[0_1px_0_rgba(255,255,255,0.8)_inset]">
+        No sensors found
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-xl border border-line bg-white shadow-[0_1px_0_rgba(255,255,255,0.8)_inset]">
       <div className="flex gap-1 overflow-x-auto border-b border-line p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {SENSOR_DATA.map((s, i) => (
+        {sensorList.map((s, i) => (
           <button
-            key={s.wallet}
+            key={s.sensor_wallet}
             onClick={() => setTabIndex(i)}
             className={`shrink-0 rounded-lg px-4 py-1.5 text-[10px] font-bold tracking-[0.12em] uppercase transition-all ${
               tabIndex === i
@@ -240,7 +263,7 @@ export function SensorPanel() {
                 : "text-muted hover:bg-cream/50 hover:text-ink"
             }`}
           >
-            {s.tabLabel}
+            {s.tab_label}
           </button>
         ))}
       </div>
@@ -271,11 +294,11 @@ export function SensorPanel() {
             <div className="flex items-center gap-1.5 rounded-lg bg-cream/50 px-2 py-1 ring-1 ring-line/5">
               <Wallet className="h-3 w-3 text-muted" />
               <span className="font-mono text-[11px] font-medium text-ink-dim">
-                {SHORT(sensor.wallet)}
+                {SHORT(sensor.sensor_wallet)}
               </span>
             </div>
             <a
-              href={`https://explorer.solana.com/address/${sensor.wallet}`}
+              href={`https://explorer.solana.com/address/${sensor.sensor_wallet}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[11px] font-bold text-accent transition-colors hover:text-accent/80"
