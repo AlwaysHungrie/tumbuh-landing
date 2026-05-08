@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Container } from "./Container";
 import { usePathname } from "next/navigation";
-import { EarthIcon, Map, MapPin, MapPinPen, MapPlus } from "lucide-react";
+import { EarthIcon } from "lucide-react";
 
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
@@ -92,7 +92,7 @@ export function SiteNav() {
 
   return (
     <>
-      <nav className="sticky top-0 z-20 border-b border-line bg-cream/78 backdrop-blur-md backdrop-saturate-[140%]">
+      <nav className="sticky top-0 z-20 border-b border-line bg-cream/78 backdrop-blur-md backdrop-saturate-140">
         <Container className="flex h-14 min-h-14 items-center justify-between gap-2 sm:h-16 sm:min-h-16">
           <Link
             className="flex min-w-0 shrink items-center gap-2 text-base font-semibold tracking-tight sm:gap-2.5 sm:text-lg"
@@ -233,7 +233,7 @@ export function SiteNav() {
             role="dialog"
             aria-modal="true"
             aria-labelledby={dialogTitleId}
-            className="relative z-10 w-full max-w-[440px] rounded-[14px] border border-line bg-cream p-6 shadow-[0_24px_80px_rgba(20,22,20,0.18)] animate-fade-rise motion-reduce:animate-none"
+            className="relative z-10 w-full max-w-[440px] rounded-card border border-line bg-cream p-6 shadow-[0_24px_80px_rgba(20,22,20,0.18)] animate-fade-rise motion-reduce:animate-none"
           >
             <button
               type="button"
