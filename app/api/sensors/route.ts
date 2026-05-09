@@ -30,13 +30,15 @@ export async function GET(req: NextRequest) {
 
   const rows = plantWallet
     ? await sql`
-        SELECT id, sensor_wallet, plant_wallet, mint_address, signature, name, type, tab_label, unit_symbol, created_at
+        SELECT id, sensor_wallet, plant_wallet, mint_address, signature,
+               name, type, tab_label, unit_symbol, created_at
         FROM sensors2
         WHERE plant_wallet = ${plantWallet}
         ORDER BY created_at DESC
       `
     : await sql`
-        SELECT id, sensor_wallet, plant_wallet, mint_address, signature, name, type, tab_label, unit_symbol, created_at
+        SELECT id, sensor_wallet, plant_wallet, mint_address, signature,
+               name, type, tab_label, unit_symbol, created_at
         FROM sensors2
         ORDER BY created_at DESC
       `;

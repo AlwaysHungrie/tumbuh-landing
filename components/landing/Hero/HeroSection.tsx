@@ -67,7 +67,7 @@ export function HeroSection() {
               variant="primary"
               className="w-full justify-center sm:w-auto"
             >
-              Explore the network
+              See plants in action
             </ButtonLink>
             <ButtonLink
               href="#idea"
@@ -81,7 +81,7 @@ export function HeroSection() {
           <div className="mt-8 flex flex-wrap gap-x-6 gap-y-4 text-[13px] text-muted sm:mt-9 sm:gap-7 text-center md:text-left">
             <span>
               <strong className="mb-0 block text-xl font-semibold tracking-tight text-ink">
-                4
+                1+
               </strong>
               plants
             </span>
@@ -93,7 +93,7 @@ export function HeroSection() {
             </span>
             <span>
               <strong className="mb-0 block text-xl font-semibold tracking-tight text-ink">
-                $125
+                $25
               </strong>
               total network value
             </span>

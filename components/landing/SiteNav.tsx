@@ -144,7 +144,7 @@ export function SiteNav() {
               aria-expanded={dialogOpen}
               aria-controls="join-waitlist-dialog"
             >
-              <span className="max-[380px]:sr-only">Join the network</span>
+              <span className="max-[380px]:sr-only">Join Us</span>
               <span className="hidden max-[380px]:inline">Join</span>
             </button>
 
@@ -153,7 +153,9 @@ export function SiteNav() {
                 href="/network/map"
                 className="rounded-full bg-ink px-3 py-2.5 text-xs font-medium text-cream transition-[transform,background-color] duration-150 ease-out hover:-translate-y-px hover:bg-accent sm:px-4 sm:text-sm"
               >
-                <span className="max-[380px]:sr-only">Explore →</span>
+                <span className="max-[380px]:sr-only">
+                  Explore the network →
+                </span>
               </Link>
             ) : (
               <Link

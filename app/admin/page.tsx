@@ -120,7 +120,7 @@ export default function AdminPage() {
           <span className="truncate">Tumbuh - Admin Panel</span>
         </Link>
 
-        <div className="mb-4 flex items-center gap-2 rounded-lg bg-cream px-3 py-2 ring-1 ring-line/80">
+        <div className="flex items-center gap-2 rounded-lg bg-cream px-3 py-2 ring-1 ring-line/80">
           <Wallet className="h-3.5 w-3.5 shrink-0 text-muted" />
           <button
             disabled={!ready}
@@ -148,22 +148,24 @@ export default function AdminPage() {
           <p className="text-[12px] text-muted">Connect wallet to continue.</p>
         </div>
       ) : (
-        <div className="grid flex-1 min-h-0 grid-rows-2 grid-cols-3 gap-4 overflow-hidden p-4">
-          <CreateTokenForm
-            solanaWallet={solanaWallet}
-            onSuccess={fetchTokens}
-          />
-          <RegisterPlantForm onSuccess={fetchPlants} />
-          <RegisterSensorForm
-            solanaWallet={solanaWallet}
-            tokens={tokens}
-            plants={plants}
-            onSuccess={fetchSensors}
-          />
+        <div className="flex-1 min-h-0 overflow-y-auto p-4">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-auto">
+            <CreateTokenForm
+              solanaWallet={solanaWallet}
+              onSuccess={fetchTokens}
+            />
+            <RegisterPlantForm onSuccess={fetchPlants} />
+            <RegisterSensorForm
+              solanaWallet={solanaWallet}
+              tokens={tokens}
+              plants={plants}
+              onSuccess={fetchSensors}
+            />
 
-          <TokenList tokens={tokens} onRefresh={fetchTokens} />
-          <PlantList plants={plants} onRefresh={fetchPlants} />
-          <SensorList sensors={sensors} onRefresh={fetchSensors} />
+            <TokenList tokens={tokens} onRefresh={fetchTokens} />
+            <PlantList plants={plants} onRefresh={fetchPlants} />
+            <SensorList sensors={sensors} onRefresh={fetchSensors} />
+          </div>
         </div>
       )}
     </div>

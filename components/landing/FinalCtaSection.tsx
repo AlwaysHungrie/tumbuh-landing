@@ -21,7 +21,7 @@ export function FinalCtaSection() {
         </p>
         <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           <ButtonLink
-            href="/network/5RnVY4jqrWfhnHNSyAhRJBXYDKoGHVbr6gF71du1ejwj"
+            href="/network/map"
             variant="primary"
             className="w-full justify-center sm:w-auto"
           >

@@ -51,7 +51,7 @@ export async function POST(request: Request) {
   await ensureChatTable();
 
   const body = await request.json();
-  const { from, to, body: msgBody, action = "accept" } = body;
+  const { from, to, body: msgBody, action = "undecided" } = body;
 
   if (!from || !to || !msgBody) {
     return Response.json(
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const validActions = ["accept", "ignore", "update_code"];
+  const validActions = ["accept", "ignore", "update_code", "undecided"];
   if (!validActions.includes(action)) {
     return Response.json(
       { error: `action must be one of: ${validActions.join(", ")}` },
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
 
   const [row] = await sql`
     INSERT INTO chat_messages ("from", "to", body, action)
-    VALUES (${from}, ${to}, ${msgBody}, ${action})
+    VALUES (${from}, ${to}, ${msgBody}, ${"undecided"})
     RETURNING id, "from", "to", body, action,
               TO_CHAR(ts AT TIME ZONE 'UTC', 'HH24:MI') AS ts
   `;

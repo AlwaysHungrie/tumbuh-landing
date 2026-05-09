@@ -1,5 +1,6 @@
 "use client";
 
+import { Hourglass, LucideHourglass } from "lucide-react";
 import { useEffect, useRef, useState, useCallback } from "react";
 
 const WALLET = "5RnVY4jqrWfhnHNSyAhRJBXYDKoGHVbr6gF71du1ejwj";
@@ -48,11 +49,34 @@ const ACTION_CONFIG: Record<ActionButton, ActionMeta> = {
 
 const ACTION_ORDER: ActionButton[] = ["accept", "ignore", "update_code"];
 
+function usePlantBrainCycle() {
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setTick((t) => t + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const now = new Date();
+  const totalSeconds = now.getMinutes() * 60 + now.getSeconds();
+  const cycleSeconds = totalSeconds % (30 * 60); // 30-min cycle
+  const isActive = cycleSeconds >= 25 * 60; // last 5 min = active
+  const remaining = isActive
+    ? 30 * 60 - cycleSeconds // countdown to next work period
+    : 25 * 60 - cycleSeconds; // countdown to active
+  const mm = String(Math.floor(remaining / 60)).padStart(2, "0");
+  const ss = String(remaining % 60).padStart(2, "0");
+
+  void tick; // consumed only to trigger re-render
+  return { isActive, label: `${mm}:${ss}` };
+}
+
 export function GlobalChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const { isActive, label } = usePlantBrainCycle();
   const sentinelRef = useRef<HTMLDivElement>(null);
   const loadingRef = useRef(false);
 
@@ -96,7 +120,7 @@ export function GlobalChat() {
           fetchPage(nextCursor);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     observer.observe(el);
@@ -190,14 +214,19 @@ export function GlobalChat() {
 
       {/* Footer */}
       <div className="border-t border-line px-4 py-3">
-        <div className="flex items-center gap-2.5 rounded-lg border border-line bg-cream px-3 py-2.5">
-          <span
-            className="relative h-2 w-2 shrink-0 rounded-full bg-accent after:absolute after:-inset-1 after:animate-plant-pulse after:rounded-full after:border-2 after:border-accent after:opacity-60 after:content-['']"
-            aria-hidden
-          />
+        <div className="flex items-center justify-between rounded-lg border border-line bg-cream px-3 py-2.5">
           <span className="text-[12px] font-medium text-ink-dim">
-            Plant Brain
+            Plant Brain{" "}
+            <span className={isActive ? "text-accent" : "text-muted"}>
+              ({isActive ? "Active" : "Inactive"})
+            </span>
           </span>
+          {!isActive && (
+            <span className="font-mono flex items-center gap-2 text-[12px] font-medium tabular-nums text-ink-dim">
+              <LucideHourglass className="size-3 animate-pulse" />
+              {label}
+            </span>
+          )}
         </div>
       </div>
     </div>

@@ -16,7 +16,7 @@ export default function Privy({ children }: { children: React.ReactNode }) {
         externalWallets: {
           solana: {
             connectors: toSolanaWalletConnectors({
-              shouldAutoConnect: true,
+              shouldAutoConnect: false,
             }),
           },
           walletConnect: {
