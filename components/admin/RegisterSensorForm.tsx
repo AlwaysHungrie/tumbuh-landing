@@ -68,14 +68,14 @@ export function RegisterSensorForm({
       const kp = await generateKeyPair(true);
       const sensorAddress = await getAddressFromPublicKey(kp.publicKey);
 
-      // const result = await mintTokens(
-      //   solanaWallet,
-      //   selectedMint,
-      //   sensorAddress,
-      //   MINT_AMOUNT,
-      // );
+      const result = await mintTokens(
+        solanaWallet,
+        selectedMint,
+        sensorAddress,
+        MINT_AMOUNT,
+      );
 
-      const result = { signature: "empty" };
+      // const result = { signature: "empty" };
 
       const { signature = "empty" } = result;
 
